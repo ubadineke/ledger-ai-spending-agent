@@ -1,0 +1,6 @@
+{
+  "max_per_tx_eth": 0.05,
+  "daily_limit_eth": 0.1,
+  "allowed_networks": ["sepolia", "ethereum"],
+  "address_whitelist": []
+}

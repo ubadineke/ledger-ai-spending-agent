@@ -1,0 +1,25 @@
+{
+  "name": "ledger-ai-agent",
+  "version": "1.0.0",
+  "description": "AI spending agent with Ledger hardware signing guardrails",
+  "main": "dist/main.js",
+  "scripts": {
+    "dev": "tsx src/main.ts",
+    "build": "tsc",
+    "start": "node dist/main.js",
+    "speculos": "docker run --rm -it -v $(pwd)/apps:/speculos/apps --publish 5001:5000 --publish 41000:41000 speculos --display headless --api-port 5000 --vnc-port 41000 apps/app-1.22.1-nanos2.elf"
+  },
+  "dependencies": {
+    "@ledgerhq/device-management-kit": "^1.6.0",
+    "@ledgerhq/device-signer-kit-ethereum": "^1.16.0",
+    "@ledgerhq/device-transport-kit-speculos": "^1.2.1",
+    "dotenv": "^16.4.5",
+    "ethers": "^6.16.0",
+    "openai": "^6.42.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.0"
+  }
+}
