@@ -1002,6 +1002,15 @@
     enable();
   });
 
+  es.addEventListener('rejected', e => {
+    const { reason } = JSON.parse(e.data);
+    setNode('device', 'error', 'Rejected on device');
+    hideDeviceCard();
+    setDevice('connected', 'Device Connected');
+    appendLog('error', 'device', reason || 'Transaction rejected on device');
+    enable();
+  });
+
   es.addEventListener('reset', () => {
     resetPipeline();
     hideDeviceCard();
@@ -1045,7 +1054,7 @@
     const msgEl = id('m-' + step);
     if (!node) return;
     node.className = 'p-node ' + status;
-    msgEl.textContent = msg;
+    msgEl.textContent = typeof msg === 'object' ? JSON.stringify(msg) : String(msg ?? '');
 
     const idx = NODE_INDEX[step];
     if (status === 'active' && idx > 0) {

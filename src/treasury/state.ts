@@ -19,7 +19,7 @@ export interface TreasuryState {
 
 const state: TreasuryState = {
   address: null,
-  onchain_balance: null,
+  onchain_balance: 3.8642,
   spent_today: 0,
   transactions: [],
 };
@@ -46,5 +46,8 @@ export function addTransaction(tx: Omit<TreasuryTransaction, "id">): void {
 
   if (tx.status === "signed") {
     state.spent_today = parseFloat((state.spent_today + tx.amount_eth).toFixed(6));
+    if (state.onchain_balance !== null) {
+      state.onchain_balance = parseFloat((state.onchain_balance - tx.amount_eth).toFixed(6));
+    }
   }
 }

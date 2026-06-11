@@ -88,6 +88,8 @@ export async function signTransaction(
 
     const result = await new Promise<SignResult>((resolve) => {
       const { observable } = signerEth.signTransaction(DERIVATION_PATH, txBuffer, {});
+      let settled = false;
+      const done = (r: SignResult) => { if (!settled) { settled = true; resolve(r); } };
 
       observable.subscribe({
         next: (state) => {
@@ -95,16 +97,20 @@ export async function signTransaction(
             onProgress?.("device", "Waiting for device...");
           } else if (state.status === DeviceActionStatus.Completed) {
             const sig = state.output;
-            resolve({
-              status: "signed",
-              output: `r=${sig.r}  s=${sig.s}  v=${sig.v}`,
-            });
+            done({ status: "signed", output: `r=${sig.r}  s=${sig.s}  v=${sig.v}` });
           } else if (state.status === DeviceActionStatus.Error) {
-            resolve({ status: "error", output: String(state.error) });
+            done({ status: "rejected", output: String(state.error) });
+          } else {
+            // Any other terminal status (Stopped, etc.)
+            done({ status: "rejected", output: "Transaction rejected" });
           }
         },
         error: (err: unknown) => {
-          resolve({ status: "error", output: String(err) });
+          done({ status: "rejected", output: String(err) });
+        },
+        complete: () => {
+          // Observable completed without a Completed state = user rejected
+          done({ status: "rejected", output: "Transaction rejected on device" });
         },
       });
     });

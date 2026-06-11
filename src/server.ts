@@ -24,7 +24,7 @@ function pipelineStep(
   status: "active" | "done" | "error",
   message: string
 ) {
-  emit("pipeline", { step, status, message });
+  emit("pipeline", { step, status, message: String(message) });
 }
 
 // SSE stream
@@ -117,20 +117,25 @@ app.post("/execute", async (req, res) => {
       emit("treasury", getTreasury());
     } else if (result.status === "rejected") {
       pipelineStep("device", "error", "Rejected on device");
+      emit("rejected", { reason: "Transaction rejected on device" });
     } else {
       pipelineStep("device", "error", result.output);
+      emit("rejected", { reason: result.output });
     }
   } catch (err) {
     pipelineStep("agent", "error", String(err));
+    emit("rejected", { reason: String(err) });
   }
 });
 
 async function refreshBalance(address: string) {
   try {
     const balance = await getOnchainBalance(address);
-    setOnchainBalance(balance);
-    emit("treasury", getTreasury());
-    console.log(`  Balance refreshed: ${balance} ETH`);
+    if (balance > 0) {
+      setOnchainBalance(balance);
+      emit("treasury", getTreasury());
+      console.log(`  Balance refreshed: ${balance} ETH`);
+    }
   } catch (err) {
     console.error("  Balance fetch failed:", err);
   }
