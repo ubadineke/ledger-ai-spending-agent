@@ -1,6 +1,6 @@
 # Ledger AI Spending Agent
 
-An AI agent that moves ETH — but cannot sign anything without hardware approval.
+An AI agent that moves ETH — and cannot sign anything without hardware approval.
 
 Every transaction routes through the Ledger Device Management Kit (DMK) and requires explicit confirmation on a Ledger device (or Speculos emulator) before a signature is produced. The agent cannot bypass this. The hardware is the kill switch.
 
@@ -12,7 +12,7 @@ AI agents that touch value today sign transactions with software keys — API ke
 
 ## The Solution
 
-This project wires the [Ledger Device Management Kit](https://github.com/LedgerHQ/agent-skills) into an AI spending agent as a mandatory signing layer. The agent can parse intent and check rules in software — but it cannot produce a valid signature without a human reviewing and approving the transaction on Ledger hardware.
+This project wires the [Ledger Device Management Kit](https://github.com/LedgerHQ/agent-skills) into an AI spending agent as a mandatory hardware signing layer. The agent can parse intent and check rules in software — but it cannot produce a valid signature without a human reviewing and approving the transaction on Ledger hardware.
 
 ```
 User: "send 0.02 ETH to 0xABC... on sepolia"
@@ -164,6 +164,12 @@ This project uses:
 - `@ledgerhq/device-signer-kit-ethereum` — Ethereum signing via APDU
 
 The signing flow ends on a Ledger device (emulated via Speculos). The `r`, `s`, `v` signature is produced by the Ledger Ethereum app, not by software.
+
+---
+
+## Demo script
+
+See [DEMO.md](./DEMO.md) for the full step-by-step walkthrough with narration cues.
 
 ---
 
