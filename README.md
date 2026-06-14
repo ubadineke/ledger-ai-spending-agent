@@ -1,6 +1,6 @@
 # Ledger AI Spending Agent
 
-![Demo](assets/demo.gif)
+<img src="assets/demo.gif" width="100%" />
 
 An AI agent that moves ETH — and cannot sign anything without hardware approval.
 
